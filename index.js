@@ -1,16 +1,22 @@
 // index.js
-const { fetchMyIP, fetchCoordsByIP } = require('./iss');
+const { fetchMyIP, fetchCoordsByIP, fetchISSFlyOverTimes } = require('./iss');
 
 fetchMyIP((error, ip) => {
   if (error) {
-    console.log("It didn't work!" , error);
+    console.log("It didn't work!", error);
     return;
   }
   fetchCoordsByIP(ip, (error, coords) => {
     if (error) {
-      console.log("It didn't work!" , error);
+      console.log("It didn't work!", error);
       return;
     }
-    console.log(`It worked! Returned Longitude: ${coords["longitude"]} , Latitude: ${coords["latitude"]}`);
+    fetchISSFlyOverTimes(coords, (error, issflyTimes) => {
+      if (error) {
+        console.log("It didn't work!", error);
+        return;
+      }
+      console.log('Sucess: ', issflyTimes);
+    });
   });
 });
