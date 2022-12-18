@@ -29,12 +29,14 @@ const fetchCoordsByIP = function(ip, callback) {
   // use request to fetch coordinates from JSON API
   const longLatLink = `http://ipwho.is/${ip}`;
   client.get(longLatLink, (error, response, body) => {
-    body = JSON.parse(body);
-    const coords = { "longitude": body.longitude, "latitude": body.latitude };
-    if (!error && !body.success) {
+    if (!error && response.statusCode !== 200) {
       error = `Server message says: ${body.message}`;
+      callback(error, null);
+      return;
     }
-    callback(error, coords);
+    const JSONbody = JSON.parse(body);
+    const coords = { "longitude": JSONbody.longitude, "latitude": JSONbody.latitude };
+    callback(null, coords);
   });
 };
 
