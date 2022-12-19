@@ -23,22 +23,13 @@ const fetchISSFlyOverTimes = function(coords) {
   return request(`https://iss-flyover.herokuapp.com/json/?lat=${latitude}&lon=${longitude}`);
 };
 
-const printPassTimes = function(body) {
-  const passTimes = JSON.parse(body).response;
-  for (const pass of passTimes) {
-    const datetime = new Date(0);
-    datetime.setUTCSeconds(pass.risetime);
-    const duration = pass.duration;
-    console.log(`Next pass at ${datetime} for ${duration} seconds!`);
-  }
-};
-
 const nextISSTimesForMyLocation = function() {
-  fetchMyIP()
+  return fetchMyIP()
     .then(fetchCoordsByIP)
     .then(fetchISSFlyOverTimes)
-    .then(printPassTimes)
-    .catch(err => console.error('It didn\'t work : ', err));
+    .then(body => {
+      return JSON.parse(body).response;
+    });
 };
 
 module.exports = { nextISSTimesForMyLocation };
